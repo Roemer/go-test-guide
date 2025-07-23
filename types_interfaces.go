@@ -1,0 +1,11 @@
+package gotestguide
+
+////////////////////////////////////////////////////////////
+// IAbstractTestStep
+////////////////////////////////////////////////////////////
+
+type IAbstractTestStep interface {
+	GetType() TestStepType
+	AsTestStep() *TestStep
+	AsTestStepFolder() *TestStepFolder
+}
