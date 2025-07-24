@@ -1,1 +1,5 @@
+# Build output directory
+.build-output/
+
+# Test application
 cmd/tester/
