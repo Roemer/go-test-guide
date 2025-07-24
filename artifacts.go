@@ -194,7 +194,7 @@ func (s *ArtifactsService) GetStorage(depositoryId string, storageNumber int) (I
 	if err != nil {
 		return nil, resp, err
 	}
-	storage, err := unmarshalStorage(responseObject)
+	storage, err := unmarshalRawStorage(responseObject)
 	if err != nil {
 		return nil, nil, err
 	}

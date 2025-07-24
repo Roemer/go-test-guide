@@ -24,7 +24,7 @@ func (s *storages) UnmarshalJSON(data []byte) error {
 	s.Storages = make([]IStorage, len(rawStorages))
 	for i, raw := range rawStorages {
 		// Unmarshal the raw storage into the appropriate type
-		storage, err := unmarshalStorage(raw)
+		storage, err := unmarshalRawStorage(raw)
 		if err != nil {
 			return err
 		}
@@ -35,7 +35,7 @@ func (s *storages) UnmarshalJSON(data []byte) error {
 }
 
 // Internal method to unmarshal a raw storage message into the appropriate type.
-func unmarshalStorage(raw json.RawMessage) (IStorage, error) {
+func unmarshalRawStorage(raw json.RawMessage) (IStorage, error) {
 	// Unmarshal the storage type
 	var storageType struct {
 		StorageType StorageType `json:"storageType"`
