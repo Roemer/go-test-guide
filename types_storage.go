@@ -23,39 +23,49 @@ func (s *storages) UnmarshalJSON(data []byte) error {
 	// Iterate over the raw messages and unmarshal them into the correct storage type
 	s.Storages = make([]IStorage, len(rawStorages))
 	for i, raw := range rawStorages {
-		// Unmarshal the storage type
-		var storageType struct {
-			StorageType StorageType `json:"storageType"`
-		}
-		if err := json.Unmarshal(raw, &storageType); err != nil {
-			return err
-		}
-		// Create the appropriate storage type based on the type
-		var storage IStorage
-		switch storageType.StorageType {
-		case STORAGE_TYPE_FILE:
-			storage = &StorageFile{}
-		case STORAGE_TYPE_SMB:
-			storage = &StorageSmb{}
-		case STORAGE_TYPE_ARTIFACTORY:
-			storage = &StorageArtifactory{}
-		case STORAGE_TYPE_AWSS3:
-			storage = &StorageAwsS3{}
-		case STORAGE_TYPE_SFTP:
-			storage = &StorageSftp{}
-		case STORAGE_TYPE_AZUREBLOB:
-			storage = &StorageAzureBlob{}
-		default:
-			return fmt.Errorf("unknown storage type: %s", storageType.StorageType)
-		}
-		// Unmarshal the raw data into the storage type
-		if err := json.Unmarshal(raw, &storage); err != nil {
+		// Unmarshal the raw storage into the appropriate type
+		storage, err := unmarshalStorage(raw)
+		if err != nil {
 			return err
 		}
 		// Assign the storage to the slice
 		s.Storages[i] = storage
 	}
 	return nil
+}
+
+// Internal method to unmarshal a raw storage message into the appropriate type.
+func unmarshalStorage(raw json.RawMessage) (IStorage, error) {
+	// Unmarshal the storage type
+	var storageType struct {
+		StorageType StorageType `json:"storageType"`
+	}
+	if err := json.Unmarshal(raw, &storageType); err != nil {
+		return nil, err
+	}
+	// Create the appropriate storage type based on the type
+	var storage IStorage
+	switch storageType.StorageType {
+	case STORAGE_TYPE_FILE:
+		storage = &StorageFile{}
+	case STORAGE_TYPE_SMB:
+		storage = &StorageSmb{}
+	case STORAGE_TYPE_ARTIFACTORY:
+		storage = &StorageArtifactory{}
+	case STORAGE_TYPE_AWSS3:
+		storage = &StorageAwsS3{}
+	case STORAGE_TYPE_SFTP:
+		storage = &StorageSftp{}
+	case STORAGE_TYPE_AZUREBLOB:
+		storage = &StorageAzureBlob{}
+	default:
+		return nil, fmt.Errorf("unknown storage type: %s", storageType.StorageType)
+	}
+	// Unmarshal the raw data into the storage type
+	if err := json.Unmarshal(raw, &storage); err != nil {
+		return nil, err
+	}
+	return storage, nil
 }
 
 ////////////////////////////////////////////////////////////

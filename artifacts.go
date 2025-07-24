@@ -29,10 +29,16 @@ type (
 		GetArtifact(artifactId string) (*Artifact, *http.Response, error)
 		// Get all storages of a given depository.
 		GetStorages(depositoryId string) ([]IStorage, *http.Response, error)
+		// Get all information of a storage.
+		GetStorage(depositoryId string, storageNumber int) (IStorage, *http.Response, error)
 		// Create Storage.
 		CreateStorage(depositoryId string, storage IStorage) (*StorageNumberResponse, *http.Response, error)
 		// Delete the given storage. Files in the storage are not automatically removed.
 		DeleteStorage(depositoryId string, storageNumber int, removeAllFilesFromStorage *bool) (*TaskRef, *http.Response, error)
+		// Activate this storage.
+		ActivateStorage(depositoryId string, storageNumber int) (*http.Response, error)
+		// Deactivate the currently active storage in this depository.
+		DeactivateStorage(depositoryId string) (*http.Response, error)
 	}
 	ArtifactsService struct {
 		client *Client
@@ -178,6 +184,23 @@ func (s *ArtifactsService) GetStorages(depositoryId string) ([]IStorage, *http.R
 	return responseObject.Storages, resp, nil
 }
 
+func (s *ArtifactsService) GetStorage(depositoryId string, storageNumber int) (IStorage, *http.Response, error) {
+	req, err := s.client.NewRequest(http.MethodGet, fmt.Sprintf("api/artifact/depositories/%s/storages/%d", depositoryId, storageNumber), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	var responseObject json.RawMessage
+	resp, err := s.client.Do(req, &responseObject)
+	if err != nil {
+		return nil, resp, err
+	}
+	storage, err := unmarshalStorage(responseObject)
+	if err != nil {
+		return nil, nil, err
+	}
+	return storage, resp, nil
+}
+
 func (s *ArtifactsService) CreateStorage(depositoryId string, storage IStorage) (*StorageNumberResponse, *http.Response, error) {
 	// Prepare the body
 	bodyBytes, err := json.Marshal(storage)
@@ -220,4 +243,20 @@ func (s *ArtifactsService) DeleteStorage(depositoryId string, storageNumber int,
 		return nil, resp, err
 	}
 	return responseObject, resp, nil
+}
+
+func (s *ArtifactsService) ActivateStorage(depositoryId string, storageNumber int) (*http.Response, error) {
+	req, err := s.client.NewRequest(http.MethodPut, fmt.Sprintf("api/artifact/depositories/%s/storages/%d/activate", depositoryId, storageNumber), nil)
+	if err != nil {
+		return nil, err
+	}
+	return s.client.Do(req, nil)
+}
+
+func (s *ArtifactsService) DeactivateStorage(depositoryId string) (*http.Response, error) {
+	req, err := s.client.NewRequest(http.MethodPut, fmt.Sprintf("api/artifact/depositories/%s/storages/deactivate", depositoryId), nil)
+	if err != nil {
+		return nil, err
+	}
+	return s.client.Do(req, nil)
 }

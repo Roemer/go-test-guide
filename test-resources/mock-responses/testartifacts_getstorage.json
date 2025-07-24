@@ -1,0 +1,13 @@
+{
+  "storageType": "fileStorage",
+  "storageNumber": 1,
+  "name": "MyLocalStorage",
+  "folder": "/mnt/path/to/files",
+  "keepFileInStorageWhenDeletingArtifact": false,
+  "quota": {
+    "limitInGiB": 100,
+    "rejectUpload": true,
+    "notifyDepositoryManagerThresholdInPercent": 80,
+    "notifyDepositoryUsersThresholdInPercent": 95
+  }
+}
