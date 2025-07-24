@@ -1,6 +1,7 @@
 package gotestguide
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,10 +13,16 @@ import (
 // Error for 404 not found responses.
 var ErrNotFound = errors.New("404 Not Found")
 
+// Ptr is a helper that returns a pointer to v.
+func Ptr[T any](v T) *T {
+	return &v
+}
+
 // A client to interact with the test.guide API.
 type Client struct {
 	baseUrl *url.URL
 	authKey string
+	debug   bool
 
 	// API for up- and download of artifacts to/from test.guide.
 	Artifacts ArtifactsServiceInterface
@@ -66,10 +73,12 @@ func (c *Client) Do(req *http.Request, v any) (*http.Response, error) {
 	}()
 
 	// For debugging
-	//bodyBytes, _ := io.ReadAll(resp.Body)
-	//resp.Body.Close()
-	//fmt.Println(string(bodyBytes))
-	//resp.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+	if c.debug {
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		resp.Body.Close()
+		fmt.Println(string(bodyBytes))
+		resp.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+	}
 
 	// Verify the response
 	err = c.checkResponse(resp)
@@ -83,6 +92,11 @@ func (c *Client) Do(req *http.Request, v any) (*http.Response, error) {
 		}
 	}
 	return resp, nil
+}
+
+// Enable debugging (printing) of all received values.
+func (c *Client) SetDebug(debug bool) {
+	c.debug = debug
 }
 
 func (c *Client) checkResponse(resp *http.Response) error {

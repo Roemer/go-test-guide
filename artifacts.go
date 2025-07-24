@@ -28,6 +28,8 @@ type (
 		GetArtifact(artifactId string) (*Artifact, *http.Response, error)
 		// Get all storages of a given depository.
 		GetStorages(depositoryId string) ([]IStorage, *http.Response, error)
+		// Create Storage.
+		CreateStorage(depositoryId string, storage IStorage) (*StorageNumberResponse, *http.Response, error)
 	}
 	ArtifactsService struct {
 		client *Client
@@ -171,4 +173,27 @@ func (s *ArtifactsService) GetStorages(depositoryId string) ([]IStorage, *http.R
 		return nil, resp, err
 	}
 	return responseObject.Storages, resp, nil
+}
+
+func (s *ArtifactsService) CreateStorage(depositoryId string, storage IStorage) (*StorageNumberResponse, *http.Response, error) {
+	// Prepare the body
+	bodyBytes, err := json.Marshal(storage)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to marshal object: %w", err)
+	}
+
+	// Prepare the request
+	req, err := s.client.NewRequest(http.MethodPost, fmt.Sprintf("api/artifact/depositories/%s/storages", depositoryId), bytes.NewReader(bodyBytes))
+	if err != nil {
+		return nil, nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	// Send the request
+	var responseObject = &StorageNumberResponse{}
+	resp, err := s.client.Do(req, &responseObject)
+	if err != nil {
+		return nil, resp, err
+	}
+	return responseObject, resp, nil
 }
