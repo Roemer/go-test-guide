@@ -13,6 +13,9 @@ import (
 // Error for 404 not found responses.
 var ErrNotFound = errors.New("404 Not Found")
 
+var TruePtr = Ptr(true)
+var FalsePtr = Ptr(false)
+
 // Ptr is a helper that returns a pointer to v.
 func Ptr[T any](v T) *T {
 	return &v
@@ -63,6 +66,9 @@ func (c *Client) NewRequest(method, path string, body io.Reader) (*http.Request,
 
 // Execute an HTTP request and decode the response into the provided variable.
 func (c *Client) Do(req *http.Request, v any) (*http.Response, error) {
+	if c.debug {
+		fmt.Printf("Sending request: %s %s\n", req.Method, req.URL)
+	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute request: %w", err)

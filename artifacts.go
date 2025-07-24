@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strconv"
 )
 
 type (
@@ -30,6 +31,8 @@ type (
 		GetStorages(depositoryId string) ([]IStorage, *http.Response, error)
 		// Create Storage.
 		CreateStorage(depositoryId string, storage IStorage) (*StorageNumberResponse, *http.Response, error)
+		// Delete the given storage. Files in the storage are not automatically removed.
+		DeleteStorage(depositoryId string, storageNumber int, removeAllFilesFromStorage *bool) (*TaskRef, *http.Response, error)
 	}
 	ArtifactsService struct {
 		client *Client
@@ -191,6 +194,27 @@ func (s *ArtifactsService) CreateStorage(depositoryId string, storage IStorage) 
 
 	// Send the request
 	var responseObject = &StorageNumberResponse{}
+	resp, err := s.client.Do(req, &responseObject)
+	if err != nil {
+		return nil, resp, err
+	}
+	return responseObject, resp, nil
+}
+
+func (s *ArtifactsService) DeleteStorage(depositoryId string, storageNumber int, removeAllFilesFromStorage *bool) (*TaskRef, *http.Response, error) {
+	urlObject := url.URL{
+		Path: fmt.Sprintf("api/artifact/depositories/%s/storages/%d", depositoryId, storageNumber),
+	}
+	if removeAllFilesFromStorage != nil {
+		query := url.Values{}
+		query.Set("removeAllFilesFromStorage", strconv.FormatBool(*removeAllFilesFromStorage))
+		urlObject.RawQuery = query.Encode()
+	}
+	req, err := s.client.NewRequest(http.MethodDelete, urlObject.String(), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	var responseObject = &TaskRef{}
 	resp, err := s.client.Do(req, &responseObject)
 	if err != nil {
 		return nil, resp, err
