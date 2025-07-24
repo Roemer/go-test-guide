@@ -26,6 +26,8 @@ type (
 		UploadArtifact(depositoryId string, artifactPath string, attributes ...*Attribute) (*ArtifactCreatedResponse, *http.Response, error)
 		// Get all information of an artifact.
 		GetArtifact(artifactId string) (*Artifact, *http.Response, error)
+		// Get all storages of a given depository.
+		GetStorages(depositoryId string) ([]IStorage, *http.Response, error)
 	}
 	ArtifactsService struct {
 		client *Client
@@ -156,4 +158,17 @@ func (s *ArtifactsService) GetArtifact(artifactId string) (*Artifact, *http.Resp
 		return nil, resp, err
 	}
 	return responseObject, resp, nil
+}
+
+func (s *ArtifactsService) GetStorages(depositoryId string) ([]IStorage, *http.Response, error) {
+	req, err := s.client.NewRequest(http.MethodGet, fmt.Sprintf("api/artifact/depositories/%s/storages", depositoryId), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	var responseObject = storages{}
+	resp, err := s.client.Do(req, &responseObject)
+	if err != nil {
+		return nil, resp, err
+	}
+	return responseObject.Storages, resp, nil
 }

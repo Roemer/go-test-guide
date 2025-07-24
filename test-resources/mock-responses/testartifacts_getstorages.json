@@ -1,0 +1,186 @@
+[
+    {
+        "folder": "/path/to/folder",
+        "storageType": "fileStorage",
+        "storageNumber": 0,
+        "name": "myfilestorage",
+        "keepFileInStorageWhenDeletingArtifact": false
+    },
+    {
+        "folder": "/path/to/folder",
+        "storageType": "fileStorage",
+        "storageNumber": 1,
+        "name": "myfilestorage2",
+        "keepFileInStorageWhenDeletingArtifact": false,
+        "quota": {
+            "limitInGiB": 10,
+            "rejectUpload": true,
+            "notifyDepositoryManagerThresholdInPercent": 80,
+            "notifyDepositoryUsersThresholdInPercent": 90
+        },
+        "connectionCheck": {
+            "cronExpression": "0 0 * * *",
+            "timeZone": "Europe/Zurich",
+            "notifyProjectManagersOnFailure": true
+        }
+    },
+    {
+        "folder": "/path/to/folder",
+        "storageType": "fileStorage",
+        "storageNumber": 2,
+        "name": "myfilestorage3",
+        "keepFileInStorageWhenDeletingArtifact": false,
+        "quota": {
+            "limitInGiB": 10,
+            "rejectUpload": true,
+            "notifyDepositoryManagerThresholdInPercent": 80,
+            "notifyDepositoryUsersThresholdInPercent": 90
+        },
+        "connectionCheck": {
+            "cronExpression": "0 0 * * *",
+            "timeZone": "Europe/Zurich",
+            "notifyProjectManagersOnFailure": true
+        }
+    },
+    {
+        "userName": "myuser",
+        "domain": "mydomain",
+        "host": "myhost",
+        "port": 445,
+        "share": "myshare",
+        "folderPath": "myfolder",
+        "dfsEnabled": false,
+        "dialect": "SMB_3_0",
+        "transportEncryptionEnabled": false,
+        "storageType": "smbStorage",
+        "storageNumber": 3,
+        "name": "mysmbstorage1",
+        "keepFileInStorageWhenDeletingArtifact": false
+    },
+    {
+        "storageType": "fileStorage",
+        "storageNumber": 1,
+        "name": "MyLocalStorage",
+        "keepFileInStorageWhenDeletingArtifact": false,
+        "migrationRole": "SOURCE_OF_RUNNING_MIGRATION",
+        "deletionState": "DELETION_RUNNING",
+        "quota": {
+            "limitInGiB": 10,
+            "rejectUpload": false,
+            "notifyDepositoryManagerThresholdInPercent": 75,
+            "notifyDepositoryUsersThresholdInPercent": 90
+        },
+        "folder": "/mnt/path/to/files"
+    },
+    {
+        "storageType": "smbStorage",
+        "storageNumber": 2,
+        "name": "MySmbStorage",
+        "keepFileInStorageWhenDeletingArtifact": false,
+        "migrationRole": "SOURCE_OF_RUNNING_MIGRATION",
+        "deletionState": "DELETION_RUNNING",
+        "quota": {
+            "limitInGiB": 10,
+            "rejectUpload": false,
+            "notifyDepositoryManagerThresholdInPercent": 75,
+            "notifyDepositoryUsersThresholdInPercent": 90
+        },
+        "userName": "MyUser",
+        "password": "myP455w0rd!",
+        "domain": "mydomain",
+        "host": "192.168.1.10",
+        "port": 445,
+        "share": "path/to/share",
+        "folderPath": "path/to/folder",
+        "dfsEnabled": false,
+        "dialect": "SMB_3_1_1",
+        "transportEncryptionEnabled": false
+    },
+    {
+        "storageType": "artifactoryStorage",
+        "storageNumber": 3,
+        "name": "MyArtifactoryStorage",
+        "keepFileInStorageWhenDeletingArtifact": false,
+        "migrationRole": "SOURCE_OF_RUNNING_MIGRATION",
+        "deletionState": "DELETION_RUNNING",
+        "quota": {
+            "limitInGiB": 10,
+            "rejectUpload": false,
+            "notifyDepositoryManagerThresholdInPercent": 75,
+            "notifyDepositoryUsersThresholdInPercent": 90
+        },
+        "url": "http://localhost:8081/myArtifactory",
+        "repoKey": "myRepository",
+        "userName": "MyUser",
+        "apiKey": "ABcdEF",
+        "connectionTimeout": 10,
+        "socketTimeout": 200
+    },
+    {
+        "storageType": "awsS3Storage",
+        "storageNumber": 4,
+        "name": "MyAwsS3Storage",
+        "keepFileInStorageWhenDeletingArtifact": false,
+        "migrationRole": "SOURCE_OF_RUNNING_MIGRATION",
+        "deletionState": "DELETION_RUNNING",
+        "quota": {
+            "limitInGiB": 10,
+            "rejectUpload": false,
+            "notifyDepositoryManagerThresholdInPercent": 75,
+            "notifyDepositoryUsersThresholdInPercent": 90
+        },
+        "bucketName": "my-aws-bucket",
+        "customEndpoint": "my-local-s3:9000",
+        "userName": "user",
+        "password": "password",
+        "objectKeyPrefix": "test.guide/",
+        "storageClass": "STANDARD",
+        "region": "US_EAST_1",
+        "connectionTimeout": 10,
+        "socketTimeout": 200
+    },
+    {
+        "storageType": "sftpStorage",
+        "storageNumber": 5,
+        "name": "MySftpStorage",
+        "keepFileInStorageWhenDeletingArtifact": false,
+        "migrationRole": "SOURCE_OF_RUNNING_MIGRATION",
+        "deletionState": "DELETION_RUNNING",
+        "quota": {
+            "limitInGiB": 10,
+            "rejectUpload": false,
+            "notifyDepositoryManagerThresholdInPercent": 75,
+            "notifyDepositoryUsersThresholdInPercent": 90
+        },
+        "host": "192.168.1.10",
+        "port": 2222,
+        "authenticationInfo": {
+            "type": "BASIC",
+            "userName": "MyUser",
+            "password": "myP455w0rd!"
+        },
+        "folderPath": "path/to/folder"
+    },
+    {
+        "storageType": "azureBlobStorage",
+        "storageNumber": 6,
+        "name": "MyAzureBlobStorage",
+        "keepFileInStorageWhenDeletingArtifact": false,
+        "migrationRole": "SOURCE_OF_RUNNING_MIGRATION",
+        "deletionState": "DELETION_RUNNING",
+        "quota": {
+            "limitInGiB": 10,
+            "rejectUpload": false,
+            "notifyDepositoryManagerThresholdInPercent": 75,
+            "notifyDepositoryUsersThresholdInPercent": 90
+        },
+        "storageAccount": "https://myaccount.blob.core.windows.net/",
+        "containerName": "my-container",
+        "blobNamePrefix": "test.guide/",
+        "authenticationInfo": {
+            "type": "SHARED_KEY",
+            "accountName": "myAccount",
+            "accountKey": "Eby8v...oGMGw=="
+        }
+    }
+]

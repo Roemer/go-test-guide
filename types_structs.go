@@ -344,25 +344,6 @@ func (t *TestEnvironment) String() string {
 }
 
 ////////////////////////////////////////////////////////////
-// UploadStatus
-////////////////////////////////////////////////////////////
-
-type UploadStatus struct {
-	Status       string `json:"status"`
-	UploadResult struct {
-		UploadReturnCode int      `json:"uploadReturnCode"`
-		ReportID         int      `json:"reportId"`
-		ResultMessages   []string `json:"resultMessages"`
-		IsDoubleUpload   bool     `json:"isDoubleUpload"`
-	} `json:"uploadResult"`
-}
-
-func (u *UploadStatus) String() string {
-	return fmt.Sprintf("UploadStatus(Status: %s, UploadReturnCode: %d, ReportID: %d, IsDoubleUpload: %t)",
-		u.Status, u.UploadResult.UploadReturnCode, u.UploadResult.ReportID, u.UploadResult.IsDoubleUpload)
-}
-
-////////////////////////////////////////////////////////////
 // TestSteps
 ////////////////////////////////////////////////////////////
 
@@ -528,4 +509,23 @@ type UserProjectContext struct {
 func (u *UserProjectContext) String() string {
 	return fmt.Sprintf("UserProjectContext(ProjectID: %d, ActivationStatus: %s, EffectivePermissions: %v)",
 		u.ProjectID, u.ActivationStatus, u.EffectivePermissions)
+}
+
+////////////////////////////////////////////////////////////
+// UploadStatus
+////////////////////////////////////////////////////////////
+
+type UploadStatus struct {
+	Status       string `json:"status"`
+	UploadResult struct {
+		UploadReturnCode int      `json:"uploadReturnCode"`
+		ReportID         int      `json:"reportId"`
+		ResultMessages   []string `json:"resultMessages"`
+		IsDoubleUpload   bool     `json:"isDoubleUpload"`
+	} `json:"uploadResult"`
+}
+
+func (u *UploadStatus) String() string {
+	return fmt.Sprintf("UploadStatus(Status: %s, UploadReturnCode: %d, ReportID: %d, IsDoubleUpload: %t)",
+		u.Status, u.UploadResult.UploadReturnCode, u.UploadResult.ReportID, u.UploadResult.IsDoubleUpload)
 }

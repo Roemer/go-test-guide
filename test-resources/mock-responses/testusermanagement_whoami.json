@@ -8,15 +8,35 @@
 		{
 			"projectId": 1,
 			"activationStatus": "ACTIVE",
-			"individualPermissions": ["READ", "WRITE"],
-			"projectRoles": [101, 102],
-			"individualProjectRoles": [101],
-			"systemGroupProjectRoles": [102],
-			"effectivePermissions": ["READ", "WRITE", "EXECUTE"]
+			"individualPermissions": [
+				"READ",
+				"WRITE"
+			],
+			"projectRoles": [
+				101,
+				102
+			],
+			"individualProjectRoles": [
+				101
+			],
+			"systemGroupProjectRoles": [
+				102
+			],
+			"effectivePermissions": [
+				"READ",
+				"WRITE",
+				"EXECUTE"
+			]
 		}
 	],
-	"systemGroups": ["admins", "users"],
-	"globalPermissions": ["ADMIN", "USER_MANAGEMENT"],
+	"systemGroups": [
+		"admins",
+		"users"
+	],
+	"globalPermissions": [
+		"ADMIN",
+		"USER_MANAGEMENT"
+	],
 	"userType": "INTERNAL",
 	"confirmedDisclaimerVersion": 2,
 	"lastSeen": "2 weeks ago"
