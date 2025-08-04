@@ -3,6 +3,7 @@ package main
 import (
 	"archive/zip"
 	"fmt"
+	"go/build"
 	"io"
 	"os"
 	"path/filepath"
@@ -17,6 +18,7 @@ import (
 ////////////////////////////////////////////////////////////
 
 var outputDirectory = ".build-output"
+var reportsDirectory = ".test-reports"
 
 ////////////////////////////////////////////////////////////
 // Main
@@ -82,6 +84,26 @@ func init() {
 			return err
 		}
 		return zipRelease(path)
+	})
+
+	gotaskr.Task("Test", func() error {
+		if err := os.MkdirAll(reportsDirectory, os.ModePerm); err != nil {
+			return err
+		}
+		goTestReport := filepath.Join(reportsDirectory, "go-test-report.txt")
+		stdout, _, execErr := execr.RunGetOutput(false, "go", execr.SplitArgumentString("test -v ./...")...)
+		if err := os.WriteFile(goTestReport, []byte(stdout), os.ModePerm); err != nil {
+			return err
+		}
+
+		junitTestReport := filepath.Join(reportsDirectory, "junit-test-report.xml")
+		if err := execr.Run(true, "go", "install", "github.com/jstemmer/go-junit-report/v2@v2.1.0"); err != nil {
+			return err
+		}
+		if err := execr.Run(true, filepath.Join(build.Default.GOPATH, "bin/go-junit-report"), "-in", goTestReport, "-set-exit-code", "-out", junitTestReport); err != nil {
+			return err
+		}
+		return execErr
 	})
 }
 
