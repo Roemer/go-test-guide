@@ -20,7 +20,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '${GO_VERSION}'
+          go-version: "$GO_VERSION"
 
       - name: Build
         run: go run ./build/build.go --target "Compile:All"
