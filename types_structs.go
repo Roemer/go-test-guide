@@ -127,6 +127,19 @@ func (c *Converter) String() string {
 }
 
 ////////////////////////////////////////////////////////////
+// DeleteStatus
+////////////////////////////////////////////////////////////
+
+type DeleteStatus struct {
+	Status          string `json:"status"`
+	DetailedMessage string `json:"detailedMessage"`
+}
+
+func (d *DeleteStatus) String() string {
+	return fmt.Sprintf("DeleteStatus(Status: %s, DetailedMessage: %s)", d.Status, d.DetailedMessage)
+}
+
+////////////////////////////////////////////////////////////
 // Depository
 ////////////////////////////////////////////////////////////
 

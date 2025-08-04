@@ -21,12 +21,16 @@ type (
 		UploadReport(projectId int, converterId string, reportPath string) (*TaskRef, *http.Response, error)
 		// Uploads a new report from the given objects.
 		//UploadReportTyped(projectId int, report *TestGuideReport) (*TaskRef, *http.Response, error)
+		// Delete the report with the given report ID (ATX ID).
+		DeleteReport(reportId int64) (*TaskRef, *http.Response, error)
 		// Retrieve all test case executions for the supplied report ID (ATX ID).
 		GetTestCaseExecutions(reportId int64) ([]*TestCaseExecutionLink, *http.Response, error)
 		// Retrieve details about a specific test case execution.
 		GetTestCaseExecution(tceId int64) (*TestCaseExecution, *http.Response, error)
 		// Retrieve current state of report upload.
 		GetUploadStatus(taskId string) (*UploadStatus, *http.Response, error)
+		// Retrieve delete task status.
+		GetDeleteStatus(taskId string) (*DeleteStatus, *http.Response, error)
 		// Provides metadata for uploaded reports.
 		GetHistory(projectId int, startDate time.Time, endTime time.Time, offset int, limit int) ([]*ReportHistoryItem, *http.Response, error)
 		// Adds an artifact to an existing test case execution.
@@ -109,6 +113,19 @@ func (s *ReportManagementService) UploadReport(projectId int, converterId string
 	return s.UploadReport(projectId, "json2atx", file.Name())
 }*/
 
+func (s *ReportManagementService) DeleteReport(reportId int64) (*TaskRef, *http.Response, error) {
+	req, err := s.client.NewRequest(http.MethodDelete, fmt.Sprintf("api/report/reports/%d", reportId), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	var responseObject = &TaskRef{}
+	resp, err := s.client.Do(req, &responseObject)
+	if err != nil {
+		return nil, resp, err
+	}
+	return responseObject, resp, nil
+}
+
 func (s *ReportManagementService) GetHistory(projectId int, startDate time.Time, endDate time.Time, offset int, limit int) ([]*ReportHistoryItem, *http.Response, error) {
 	reqUrl := fmt.Sprintf("api/report/reports/history?projectId=%d&startDate=%s&endDate=%s&offset=%d&limit=%d",
 		projectId, url.QueryEscape(startDate.Format(time.RFC3339)), url.QueryEscape(endDate.Format(time.RFC3339)), offset, limit)
@@ -156,6 +173,19 @@ func (s *ReportManagementService) GetUploadStatus(taskId string) (*UploadStatus,
 		return nil, nil, err
 	}
 	var responseObject = &UploadStatus{}
+	resp, err := s.client.Do(req, &responseObject)
+	if err != nil {
+		return nil, resp, err
+	}
+	return responseObject, resp, nil
+}
+
+func (s *ReportManagementService) GetDeleteStatus(taskId string) (*DeleteStatus, *http.Response, error) {
+	req, err := s.client.NewRequest(http.MethodGet, fmt.Sprintf("api/report/reports/deletestatus/%s", taskId), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	var responseObject = &DeleteStatus{}
 	resp, err := s.client.Do(req, &responseObject)
 	if err != nil {
 		return nil, resp, err

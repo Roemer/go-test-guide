@@ -50,9 +50,11 @@ go get github.com/roemer/go-test-guide
 * `ReportManagement`
   * `GetConverters`
   * `UploadReport`
+  * `DeleteReport`
   * `GetTestCaseExecutions`
   * `GetTestCaseExecution`
   * `GetUploadStatus`
+  * `GetDeleteStatus`
   * `GetHistory`
   * `AddArtifact`
 * `UserManagement`
