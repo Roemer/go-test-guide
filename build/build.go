@@ -2,15 +2,19 @@ package main
 
 import (
 	"archive/zip"
+	"context"
 	"fmt"
 	"go/build"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
+	"github.com/google/go-github/v74/github"
 	"github.com/roemer/go-test-guide/internal"
 	"github.com/roemer/gotaskr"
 	"github.com/roemer/gotaskr/execr"
+	"github.com/roemer/gotaskr/log"
 )
 
 ////////////////////////////////////////////////////////////
@@ -104,6 +108,53 @@ func init() {
 			return err
 		}
 		return execErr
+	})
+
+	gotaskr.Task("Release", func() error {
+		fullVersionName := fmt.Sprintf("v%s", internal.Version)
+		log.Informationf("Creating new release for version %s", fullVersionName)
+		gitHubRepoParts := strings.Split(os.Getenv("GITHUB_REPOSITORY"), "/")
+		gitHubOwner := gitHubRepoParts[0]
+		gitHubRepo := gitHubRepoParts[1]
+		gitHubToken := os.Getenv("GITHUB_TOKEN")
+
+		// Create the client
+		ctx := context.Background()
+		client := github.NewClient(nil).WithAuthToken(gitHubToken)
+
+		// Create the new release
+		newRelease := &github.RepositoryRelease{
+			Name:    github.Ptr(fullVersionName),
+			Draft:   github.Ptr(true),
+			TagName: github.Ptr(fullVersionName),
+		}
+		release, _, err := client.Repositories.CreateRelease(ctx, gitHubOwner, gitHubRepo, newRelease)
+		if err != nil {
+			return err
+		}
+		log.Informationf("Created release: %s", *release.URL)
+
+		// Upload the artifacts
+		artifacts, err := os.ReadDir(outputDirectory)
+		if err != nil {
+			return err
+		}
+		for _, artifactPath := range artifacts {
+			log.Informationf("Uploading artifact %s", artifactPath.Name())
+			f, err := os.Open(filepath.Join(outputDirectory, artifactPath.Name()))
+			if err != nil {
+				return err
+			}
+			defer f.Close()
+			_, _, err = client.Repositories.UploadReleaseAsset(ctx, gitHubOwner, gitHubRepo, *release.ID, &github.UploadOptions{
+				Name: artifactPath.Name(),
+			}, f)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
 	})
 }
 

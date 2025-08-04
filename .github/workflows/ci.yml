@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [ main ]
 
+  workflow_dispatch:
+    inputs:
+      make_release:
+        description: 'True to make a release'
+        required: true
+        type: boolean
+
 env:
   GO_VERSION: 1.24.5
 
@@ -62,3 +69,31 @@ jobs:
           name: binary-darwin-arm
           path: .build-output/*darwin*arm*.zip
           include-hidden-files: true
+
+  # Release Job
+  release:
+    if: ${{ inputs.make_release }}
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: .build-output/
+          pattern: binary-*
+          merge-multiple: true
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "${{ vars.GO_VERSION }}"
+
+      - name: Create the release
+        run:  go run ./build/build.go --target "Release"
