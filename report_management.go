@@ -3,6 +3,7 @@ package gotestguide
 import (
 	"archive/zip"
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -20,7 +21,7 @@ type (
 		// Upload a new report.
 		UploadReport(projectId int, converterId string, reportPath string) (*TaskRef, *http.Response, error)
 		// Uploads a new report from the given objects.
-		//UploadReportTyped(projectId int, report *TestGuideReport) (*TaskRef, *http.Response, error)
+		UploadReportTyped(projectId int, report *UploadReport) (*TaskRef, *http.Response, error)
 		// Delete the report with the given report ID (ATX ID).
 		DeleteReport(reportId int64) (*TaskRef, *http.Response, error)
 		// Retrieve all test case executions for the supplied report ID (ATX ID).
@@ -94,7 +95,7 @@ func (s *ReportManagementService) UploadReport(projectId int, converterId string
 	return responseObject, resp, nil
 }
 
-/*func (s *ReportManagementService) UploadReportTyped(projectId int, report *TestGuideReport) (*TaskRef, *http.Response, error) {
+func (s *ReportManagementService) UploadReportTyped(projectId int, report *UploadReport) (*TaskRef, *http.Response, error) {
 	reportBytes, err := json.MarshalIndent(report, "", "  ")
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to marshal report: %w", err)
@@ -111,7 +112,7 @@ func (s *ReportManagementService) UploadReport(projectId int, converterId string
 		return nil, nil, fmt.Errorf("failed to close temp file: %w", err)
 	}
 	return s.UploadReport(projectId, "json2atx", file.Name())
-}*/
+}
 
 func (s *ReportManagementService) DeleteReport(reportId int64) (*TaskRef, *http.Response, error) {
 	req, err := s.client.NewRequest(http.MethodDelete, fmt.Sprintf("api/report/reports/%d", reportId), nil)

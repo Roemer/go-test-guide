@@ -50,6 +50,7 @@ go get github.com/roemer/go-test-guide
 * `ReportManagement`
   * `GetConverters`
   * `UploadReport`
+  * `UploadReportTyped`
   * `DeleteReport`
   * `GetTestCaseExecutions`
   * `GetTestCaseExecution`
@@ -76,5 +77,38 @@ Get a project:
 project, _, err := client.Platform.GetProject(projectId)
 if err != nil {
     return err
+}
+```
+
+Uploading a typed report and waiting for the upload to finish:
+```go
+newReport := &gotestguide.UploadReport{
+	Name:      "My Test Report",
+	Timestamp: time.Now().UnixMilli(),
+	TestCases: []gotestguide.IAbstractUploadTestCase{
+		&gotestguide.UploadTestCaseFolder{
+			Name: "Subfolder A",
+			TestCases: []gotestguide.IAbstractUploadTestCase{
+				&gotestguide.UploadTestCase{
+					Name:        "Test Case 1",
+					Timestamp:   time.Now().UnixMilli(),
+					Description: "This is a test case",
+					Verdict:     gotestguide.VERDICT_PASSED,
+				},
+			},
+		},
+	},
+}
+uploadTask, _, err := client.ReportManagement.UploadReportTyped(projectId, newReport)
+if err != nil {
+	return err
+}
+for {
+	time.Sleep(1 * time.Second)
+	status, _, _ := client.ReportManagement.GetUploadStatus(uploadTask.TaskID)
+	fmt.Println(status)
+	if status.Status == "finished" {
+		break
+	}
 }
 ```

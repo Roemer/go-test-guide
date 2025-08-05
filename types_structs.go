@@ -3,6 +3,7 @@ package gotestguide
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -44,7 +45,7 @@ func (a *Artifact) String() string {
 }
 
 ////////////////////////////////////////////////////////////
-// Artifact
+// ArtifactAttribute
 ////////////////////////////////////////////////////////////
 
 type ArtifactAttribute struct {
@@ -66,6 +67,20 @@ type ArtifactCreatedResponse struct {
 
 func (a *ArtifactCreatedResponse) String() string {
 	return fmt.Sprintf("ArtifactCreatedResponse(ID: %s)", a.ID)
+}
+
+////////////////////////////////////////////////////////////
+// ArtifactRef
+////////////////////////////////////////////////////////////
+
+type ArtifactRef struct {
+	Ref      string `json:"ref,omitempty"`
+	Md5      string `json:"md5,omitempty"`
+	FileSize int64  `json:"fileSize,omitempty"`
+}
+
+func (a *ArtifactRef) String() string {
+	return fmt.Sprintf("ArtifactRef(Ref: %s, Md5: %s, FileSize: %d)", a.Ref, a.Md5, a.FileSize)
 }
 
 ////////////////////////////////////////////////////////////
@@ -260,7 +275,7 @@ func (r *ReportHistoryItem) String() string {
 }
 
 ////////////////////////////////////////////////////////////
-// ReportHistoryItem
+// Review
 ////////////////////////////////////////////////////////////
 
 type Review struct {
@@ -350,10 +365,11 @@ func (l *TestCaseExecutionLink) String() string {
 type TestEnvironment struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
+	Desc  string `json:"desc,omitempty"`
 }
 
 func (t *TestEnvironment) String() string {
-	return fmt.Sprintf("TestEnvironment(Key: %s, Value: %s)", t.Key, t.Value)
+	return fmt.Sprintf("TestEnvironment(Key: %s, Value: %s, Desc: %s)", t.Key, t.Value, t.Desc)
 }
 
 ////////////////////////////////////////////////////////////
@@ -487,6 +503,17 @@ func (t *TestStepFolder) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (f *TestStepFolder) MarshalJSON() ([]byte, error) {
+	type Alias TestStepFolder
+	return json.Marshal(&struct {
+		Type string `json:"@type"`
+		*Alias
+	}{
+		Type:  strings.ToLower(string(f.GetType())),
+		Alias: (*Alias)(f),
+	})
+}
+
 ////////////////////////////////////////////////////////////
 // TestStep
 ////////////////////////////////////////////////////////////
@@ -512,6 +539,17 @@ func (f *TestStep) AsTestStep() *TestStep {
 }
 func (f *TestStep) AsTestStepFolder() *TestStepFolder {
 	return nil
+}
+
+func (f *TestStep) MarshalJSON() ([]byte, error) {
+	type Alias TestStep
+	return json.Marshal(&struct {
+		Type string `json:"@type"`
+		*Alias
+	}{
+		Type:  strings.ToLower(string(f.GetType())),
+		Alias: (*Alias)(f),
+	})
 }
 
 ////////////////////////////////////////////////////////////
@@ -572,6 +610,6 @@ type UploadStatus struct {
 }
 
 func (u *UploadStatus) String() string {
-	return fmt.Sprintf("UploadStatus(Status: %s, UploadReturnCode: %d, ReportID: %d, IsDoubleUpload: %t)",
-		u.Status, u.UploadResult.UploadReturnCode, u.UploadResult.ReportID, u.UploadResult.IsDoubleUpload)
+	return fmt.Sprintf("UploadStatus(Status: %s, UploadReturnCode: %d, ReportID: %d, IsDoubleUpload: %t, ResultMessages: %s)",
+		u.Status, u.UploadResult.UploadReturnCode, u.UploadResult.ReportID, u.UploadResult.IsDoubleUpload, strings.Join(u.UploadResult.ResultMessages, "|"))
 }
