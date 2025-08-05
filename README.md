@@ -1,5 +1,5 @@
 # go-test-guide
-A library / cmd to interact with Test.Guide.
+A library / CLI to interact with Test.Guide.
 
 ## CLI
 This project also provides a compiled CLI binary (based on the Go Module) that allows to directly interact with Test.Guide.
