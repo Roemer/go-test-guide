@@ -1,6 +1,9 @@
 package gotestguide
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"strings"
+)
 
 ////////////////////////////////////////////////////////////
 // This file contains types that are used to upload a report from a structured object.
@@ -16,7 +19,9 @@ type UploadReport struct {
 }
 
 type IAbstractUploadTestCase interface {
-	GetType() string
+	GetType() TestCaseType
+	AsTestCase() *UploadTestCase
+	AsTestCaseFolder() *UploadTestCaseFolder
 }
 
 type UploadTestCaseFolder struct {
@@ -24,8 +29,16 @@ type UploadTestCaseFolder struct {
 	TestCases []IAbstractUploadTestCase `json:"testcases"`
 }
 
-func (f *UploadTestCaseFolder) GetType() string {
-	return "testcasefolder"
+func (f *UploadTestCaseFolder) GetType() TestCaseType {
+	return TEST_CASE_TYPE_TEST_CASE_FOLDER
+}
+
+func (f *UploadTestCaseFolder) AsTestCase() *UploadTestCase {
+	return nil
+}
+
+func (f *UploadTestCaseFolder) AsTestCaseFolder() *UploadTestCaseFolder {
+	return f
 }
 
 func (f *UploadTestCaseFolder) MarshalJSON() ([]byte, error) {
@@ -34,7 +47,7 @@ func (f *UploadTestCaseFolder) MarshalJSON() ([]byte, error) {
 		Type string `json:"@type"`
 		*Alias
 	}{
-		Type:  f.GetType(),
+		Type:  strings.ToLower(string(f.GetType())),
 		Alias: (*Alias)(f),
 	})
 }
@@ -61,8 +74,16 @@ type UploadTestCase struct {
 	Recordings         []*Recording        `json:"recordings,omitempty"`
 }
 
-func (f *UploadTestCase) GetType() string {
-	return "testcase"
+func (f *UploadTestCase) GetType() TestCaseType {
+	return TEST_CASE_TYPE_TEST_CASE
+}
+
+func (f *UploadTestCase) AsTestCase() *UploadTestCase {
+	return f
+}
+
+func (f *UploadTestCase) AsTestCaseFolder() *UploadTestCaseFolder {
+	return nil
 }
 
 func (f *UploadTestCase) MarshalJSON() ([]byte, error) {
@@ -71,7 +92,14 @@ func (f *UploadTestCase) MarshalJSON() ([]byte, error) {
 		Type string `json:"@type"`
 		*Alias
 	}{
-		Type:  f.GetType(),
+		Type:  strings.ToLower(string(f.GetType())),
 		Alias: (*Alias)(f),
 	})
 }
+
+type TestCaseType string
+
+const (
+	TEST_CASE_TYPE_TEST_CASE        TestCaseType = "TestCase"
+	TEST_CASE_TYPE_TEST_CASE_FOLDER TestCaseType = "TestCaseFolder"
+)
