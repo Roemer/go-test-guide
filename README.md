@@ -58,6 +58,10 @@ go get github.com/roemer/go-test-guide
   * `GetDeleteStatus`
   * `GetHistory`
   * `AddArtifact`
+  * `GetFilters`
+  * `GetFilter`
+	* `GetTestCaseExecutionsByFilter`
+  * `GetTestCaseExecutionsByProjectFilter`
 * `UserManagement`
   * `Whoami`
   * `GetUsers`

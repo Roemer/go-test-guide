@@ -1,0 +1,106 @@
+{
+  "filterId": 0,
+  "name": "string",
+  "category": "string",
+  "description": "string",
+  "parameters": {
+    "testCaseTagSetId": 1,
+    "testSuiteName": [
+      "string"
+    ],
+    "testCaseName": [
+      "string"
+    ],
+    "parameterSetName": [
+      "string"
+    ],
+    "testEnvironments": [
+      "string"
+    ],
+    "attributes": [
+      {
+        "key": "OS",
+        "values": [
+          "Linux 4.15.0 (64 Bit)",
+          "Windows 10 1909 (64 Bit)"
+        ],
+        "negated": true
+      }
+    ],
+    "constants": [
+      {
+        "key": "OS",
+        "values": [
+          "Linux 4.15.0 (64 Bit)",
+          "Windows 10 1909 (64 Bit)"
+        ],
+        "negated": true
+      }
+    ],
+    "executionTimeMin": 0,
+    "executionTimeMax": 0,
+    "plannedTestCaseFolder": [
+      "string"
+    ],
+    "dateFromExpression": {
+      "expression": "today 09:00",
+      "timezoneId": "string"
+    },
+    "dateToExpression": {
+      "expression": "today 09:00",
+      "timezoneId": "string"
+    },
+    "archiveFiles": [
+      "string"
+    ],
+    "testArgumentExpr": "engineSpeed <= 2499.9 && gearbox = \"manual\"",
+    "testArgumentDirections": [
+      "IN",
+      "OUT",
+      "INOUT"
+    ],
+    "atxIds": [
+      0
+    ],
+    "verdicts": [
+      "NONE",
+      "PASSED",
+      "INCONCLUSIVE",
+      "ERROR",
+      "FAILED"
+    ],
+    "reviewExists": "DONT_CARE",
+    "includeObsoleteReviews": false,
+    "reviewAuthor": "string",
+    "reviewComment": "string",
+    "reviewSummary": "string",
+    "reviewVerdicts": [
+      "NONE",
+      "PASSED",
+      "INCONCLUSIVE",
+      "ERROR",
+      "FAILED",
+      "NO_VERDICT"
+    ],
+    "invalidRuns": "NO_CONSTRAINT",
+    "reviewDefectClass": "string",
+    "reviewDefectPriority": "string",
+    "reviewTags": [
+      "string"
+    ],
+    "reviewCustomEvaluation": "string",
+    "reviewTickets": [
+      "string"
+    ],
+    "containsVerdicts": [
+      "NONE",
+      "PASSED",
+      "INCONCLUSIVE",
+      "ERROR",
+      "FAILED"
+    ],
+    "verdictFilter": "NO_CONSTRAINT",
+    "minExecutions": 0,
+    "maxExecutions": 0
+  }
+}

@@ -202,6 +202,87 @@ func (f *FileReference) String() string {
 }
 
 ////////////////////////////////////////////////////////////
+// Filter
+////////////////////////////////////////////////////////////
+
+type Filter struct {
+	FilterId    int64             `json:"filterId"`
+	Name        string            `json:"name"`
+	Category    string            `json:"category,omitempty"`
+	Description string            `json:"description,omitempty"`
+	Parameters  *FilterParameters `json:"parameters,omitempty"`
+}
+
+func (f *Filter) String() string {
+	return fmt.Sprintf("Filter(FilterId: %d, Name: %s, Category: %s, Description: %s, Parameters: %v)", f.FilterId, f.Name, f.Category, f.Description, f.Parameters)
+}
+
+////////////////////////////////////////////////////////////
+// FilterInformation
+////////////////////////////////////////////////////////////
+
+type FilterInformation struct {
+	FilterId    int64  `json:"filterId"`
+	Name        string `json:"name"`
+	Category    string `json:"category,omitempty"`
+	Description string `json:"description,omitempty"`
+}
+
+func (f *FilterInformation) String() string {
+	return fmt.Sprintf("FilterInformation(FilterId: %d, Name: %s, Category: %s, Description: %s)", f.FilterId, f.Name, f.Category, f.Description)
+}
+
+////////////////////////////////////////////////////////////
+// FilterParameters
+////////////////////////////////////////////////////////////
+
+type FilterParameters struct {
+	TestCaseTagSetID       *int64              `json:"testCaseTagSetId,omitempty"`
+	TestSuiteName          []string            `json:"testSuiteName,omitempty"`
+	TestCaseName           []string            `json:"testCaseName,omitempty"`
+	ParameterSetName       []string            `json:"parameterSetName,omitempty"`
+	TestEnvironments       []string            `json:"testEnvironments,omitempty"`
+	Attributes             []*KeyValuesFilter  `json:"attributes,omitempty"`
+	Constants              []*KeyValuesFilter  `json:"constants,omitempty"`
+	ExecutionTimeMin       *int                `json:"executionTimeMin,omitempty"`
+	ExecutionTimeMax       *int                `json:"executionTimeMax,omitempty"`
+	PlannedTestCaseFolder  []string            `json:"plannedTestCaseFolder,omitempty"`
+	DateFrom               *time.Time          `json:"dateFrom,omitempty"`
+	DateTo                 *time.Time          `json:"dateTo,omitempty"`
+	ArchiveFiles           []string            `json:"archiveFiles,omitempty"`
+	TestArgumentExpr       string              `json:"testArgumentExpr,omitempty"`
+	TestArgumentDirections []Direction         `json:"testArgumentDirections,omitempty"`
+	AtxIds                 []int64             `json:"atxIds,omitempty"`
+	Verdicts               []Verdict           `json:"verdicts,omitempty"`
+	ReviewExists           string              `json:"reviewExists,omitempty"`
+	IncludeObsoleteReviews *bool               `json:"includeObsoleteReviews,omitempty"`
+	ReviewAuthor           string              `json:"reviewAuthor,omitempty"`
+	ReviewComment          string              `json:"reviewComment,omitempty"`
+	ReviewSummary          string              `json:"reviewSummary,omitempty"`
+	ReviewVerdicts         []ReviewVerdict     `json:"reviewVerdicts,omitempty"`
+	InvalidRuns            *ValidityConstraint `json:"invalidRuns,omitempty"`
+	ReviewDefectClass      string              `json:"reviewDefectClass,omitempty"`
+	ReviewDefectPriority   string              `json:"reviewDefectPriority,omitempty"`
+	ReviewTags             []string            `json:"reviewTags,omitempty"`
+	ReviewCustomEvaluation string              `json:"reviewCustomEvaluation"`
+	ReviewTickets          []string            `json:"reviewTickets"`
+}
+
+////////////////////////////////////////////////////////////
+// KeyValuesFilter
+////////////////////////////////////////////////////////////
+
+type KeyValuesFilter struct {
+	Key     string   `json:"key"`
+	Values  []string `json:"values"`
+	Negated *bool    `json:"negated,omitempty"`
+}
+
+func (k *KeyValuesFilter) String() string {
+	return fmt.Sprintf("KeyValuesFilter(Key: %s, Values: %v, Negated: %v)", k.Key, k.Values, k.Negated)
+}
+
+////////////////////////////////////////////////////////////
 // LockedArtifactGroup
 ////////////////////////////////////////////////////////////
 

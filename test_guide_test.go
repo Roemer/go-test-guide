@@ -36,6 +36,10 @@ func verifyHttpMethod(assert *assert.Assertions, r *http.Request, want string) {
 	assert.Equal(r.Method, want, "Request method should match expected value")
 }
 
+func verifyHttpQueryParameter(assert *assert.Assertions, r *http.Request, parameter string, value string) {
+	assert.Equal(r.URL.Query().Get(parameter), value, "Query parameter '%s' should match expected value", parameter)
+}
+
 // Writes the corresponding mock response to the HTTP response writer.
 func writeMockResponse(t *testing.T, w http.ResponseWriter, suffix string) {
 	mockFilePath := getMockFilePath(t, suffix)

@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
@@ -36,6 +37,14 @@ type (
 		GetHistory(projectId int, startDate time.Time, endTime time.Time, offset int, limit int) ([]*ReportHistoryItem, *http.Response, error)
 		// Adds an artifact to an existing test case execution.
 		AddArtifact(tceId int64, filePath string, comment string, category string) (*http.Response, error)
+		// Retrieve project filters.
+		GetFilters(projectId int, offset *int, limit *int) ([]*FilterInformation, *http.Response, error)
+		// Retrieve a specific project filter including its parameters.
+		GetFilter(filterId int64) (*Filter, *http.Response, error)
+		// Get test case executions matching the filter parameters.
+		GetTestCaseExecutionsByFilter(projectId int, offset *int, limit *int, filter *FilterParameters) ([]*TestCaseExecution, *http.Response, error)
+		// Get test case executions of the specified project filter.
+		GetTestCaseExecutionsByProjectFilter(filterId int64, offset *int, limit *int) ([]*TestCaseExecution, *http.Response, error)
 	}
 	ReportManagementService struct {
 		client *Client
@@ -240,4 +249,94 @@ func (s *ReportManagementService) AddArtifact(tceId int64, filePath string, comm
 	// Run the request
 	resp, err := s.client.Do(req, nil)
 	return resp, err
+}
+
+func (s *ReportManagementService) GetFilters(projectId int, offset *int, limit *int) ([]*FilterInformation, *http.Response, error) {
+	reqUrl := fmt.Sprintf("api/report/filters?projectId=%d", projectId)
+	if offset != nil {
+		reqUrl += fmt.Sprintf("&offset=%d", *offset)
+	}
+	if limit != nil {
+		reqUrl += fmt.Sprintf("&limit=%d", *limit)
+	}
+	req, err := s.client.NewRequest(http.MethodGet, reqUrl, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	var responseObject = []*FilterInformation{}
+	resp, err := s.client.Do(req, &responseObject)
+	if err != nil {
+		return nil, resp, err
+	}
+	return responseObject, resp, nil
+}
+
+func (s *ReportManagementService) GetFilter(filterId int64) (*Filter, *http.Response, error) {
+	req, err := s.client.NewRequest(http.MethodGet, fmt.Sprintf("api/report/filters/%d", filterId), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	var responseObject = &Filter{}
+	resp, err := s.client.Do(req, &responseObject)
+	if err != nil {
+		return nil, resp, err
+	}
+	return responseObject, resp, nil
+}
+
+func (s *ReportManagementService) GetTestCaseExecutionsByFilter(projectId int, offset *int, limit *int, filter *FilterParameters) ([]*TestCaseExecution, *http.Response, error) {
+	reqUrl := fmt.Sprintf("api/report/testCaseExecutions/filter?projectId=%d", projectId)
+	if offset != nil {
+		reqUrl += fmt.Sprintf("&offset=%d", *offset)
+	}
+	if limit != nil {
+		reqUrl += fmt.Sprintf("&limit=%d", *limit)
+	}
+	var body io.Reader
+	if filter != nil {
+		filterJson, err := json.Marshal(filter)
+		if err != nil {
+			return nil, nil, fmt.Errorf("failed to marshal filter: %w", err)
+		}
+		body = bytes.NewReader(filterJson)
+	}
+	req, err := s.client.NewRequest(http.MethodPost, reqUrl, body)
+	if err != nil {
+		return nil, nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	var responseObject = []*TestCaseExecution{}
+	resp, err := s.client.Do(req, &responseObject)
+	if err != nil {
+		return nil, resp, err
+	}
+	return responseObject, resp, nil
+}
+
+func (s *ReportManagementService) GetTestCaseExecutionsByProjectFilter(filterId int64, offset *int, limit *int) ([]*TestCaseExecution, *http.Response, error) {
+	// Create the request URL
+	urlObject := url.URL{
+		Path: fmt.Sprintf("api/report/testCaseExecutions/filter/%d", filterId),
+	}
+	query := url.Values{}
+	if offset != nil {
+		query.Set("offset", strconv.Itoa(*offset))
+	}
+	if limit != nil {
+		query.Set("limit", strconv.Itoa(*limit))
+	}
+	urlObject.RawQuery = query.Encode()
+
+	// Create the request
+	req, err := s.client.NewRequest(http.MethodGet, urlObject.String(), nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var responseObject = []*TestCaseExecution{}
+	resp, err := s.client.Do(req, &responseObject)
+	if err != nil {
+		return nil, resp, err
+	}
+	return responseObject, resp, nil
 }

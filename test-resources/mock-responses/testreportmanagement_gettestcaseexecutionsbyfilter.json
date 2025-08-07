@@ -1,0 +1,128 @@
+[
+  {
+    "id": 0,
+    "projectId": 0,
+    "reportId": 0,
+    "testSuiteName": "string",
+    "testCaseName": "string",
+    "executionTimestamp": "2025-08-07T15:59:51.129Z",
+    "verdict": "NONE",
+    "effectiveVerdict": "NONE",
+    "testEnvironments": [
+      {
+        "key": "string",
+        "value": "string"
+      }
+    ],
+    "attributes": [
+      {
+        "key": "string",
+        "values": [
+          "string"
+        ]
+      }
+    ],
+    "constants": [
+      {
+        "key": "string",
+        "values": [
+          "string"
+        ]
+      }
+    ],
+    "arguments": [
+      {
+        "name": "string",
+        "value": "string",
+        "direction": "IN"
+      }
+    ],
+    "recordings": [
+      {
+        "name": "string",
+        "direction": "IN",
+        "fileHash": "1a4d69722247dc37d828e5ab471fb625"
+      }
+    ],
+    "parameterSet": "string",
+    "testSteps": {
+      "setup": [
+        {
+          "name": "string",
+          "description": "string",
+          "verdict": "NONE",
+          "expectedResult": "string",
+          "dType": "TestStep"
+        }
+      ],
+      "execution": [
+        {
+          "name": "string",
+          "description": "string",
+          "verdict": "NONE",
+          "expectedResult": "string",
+          "dType": "TestStep"
+        }
+      ],
+      "teardown": [
+        {
+          "name": "string",
+          "description": "string",
+          "verdict": "NONE",
+          "expectedResult": "string",
+          "dType": "TestStep"
+        }
+      ]
+    },
+    "lastReview": {
+      "id": 0,
+      "projectId": 0,
+      "attachments": [
+        {
+          "id": 0,
+          "filename": "string",
+          "relPath": "string",
+          "uploadDate": "2025-08-07T15:59:51.129Z",
+          "downloadUrl": "string",
+          "fileSize": 0,
+          "fileHash": "1a4d69722247dc37d828e5ab471fb625",
+          "filePath": "C:/pathToShare/1a/4d/6972224... | ArtifactId-123"
+        }
+      ],
+      "summary": "string",
+      "comment": "string",
+      "verdict": "NONE",
+      "customEvaluation": "string",
+      "reviewer": "string",
+      "reviewDate": "2025-08-07T15:59:51.129Z",
+      "contacts": [
+        "string"
+      ],
+      "tickets": [
+        "string"
+      ],
+      "tags": [
+        "string"
+      ],
+      "defectClass": "string",
+      "defectPriority": "string",
+      "invalidRun": true
+    },
+    "artifacts": [
+      {
+        "id": 0,
+        "filename": "string",
+        "relPath": "string",
+        "uploadDate": "2025-08-07T15:59:51.129Z",
+        "downloadUrl": "string",
+        "fileSize": 0,
+        "fileHash": "1a4d69722247dc37d828e5ab471fb625",
+        "filePath": "C:/pathToShare/1a/4d/6972224... | ArtifactId-123"
+      }
+    ],
+    "executionTime": 0,
+    "releases": [
+      0
+    ]
+  }
+]

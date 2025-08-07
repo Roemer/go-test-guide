@@ -72,6 +72,21 @@ const (
 )
 
 ////////////////////////////////////////////////////////////
+// ReviewVerdict
+////////////////////////////////////////////////////////////
+
+type ReviewVerdict string
+
+const (
+	REVIEW_VERDICT_NONE         ReviewVerdict = "NONE"
+	REVIEW_VERDICT_PASSED       ReviewVerdict = "PASSED"
+	REVIEW_VERDICT_INCONCLUSIVE ReviewVerdict = "INCONCLUSIVE"
+	REVIEW_VERDICT_FAILED       ReviewVerdict = "FAILED"
+	REVIEW_VERDICT_ERROR        ReviewVerdict = "ERROR"
+	REVIEW_VERDICT_NO_VERDICT   ReviewVerdict = "NO_VERDICT"
+)
+
+////////////////////////////////////////////////////////////
 // SftpAuthenticationType
 ////////////////////////////////////////////////////////////
 
@@ -144,6 +159,18 @@ type UserType string
 const (
 	USER_TYPE_REGULAR   UserType = "REGULAR"
 	USER_TYPE_TECHNICAL UserType = "TECHNICAL"
+)
+
+////////////////////////////////////////////////////////////
+// ValidityConstraint
+////////////////////////////////////////////////////////////
+
+type ValidityConstraint string
+
+const (
+	VALIDITY_CONSTRAINT_NO_CONSTRAINT ValidityConstraint = "NO_CONSTRAINT"
+	VALIDITY_CONSTRAINT_ONLY_VALID    ValidityConstraint = "ONLY_VALID"
+	VALIDITY_CONSTRAINT_ONLY_INVALID  ValidityConstraint = "ONLY_INVALID"
 )
 
 ////////////////////////////////////////////////////////////
