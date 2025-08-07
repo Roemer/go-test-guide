@@ -60,7 +60,7 @@ go get github.com/roemer/go-test-guide
   * `AddArtifact`
   * `GetFilters`
   * `GetFilter`
-	* `GetTestCaseExecutionsByFilter`
+  * `GetTestCaseExecutionsByFilter`
   * `GetTestCaseExecutionsByProjectFilter`
 * `UserManagement`
   * `Whoami`
