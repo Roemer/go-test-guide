@@ -41,6 +41,7 @@ func main() {
 						Flags: []cli.Flag{
 							&cli.IntFlag{
 								Name:     "project",
+								Aliases:  []string{"projectId"},
 								Required: true,
 							},
 							&cli.StringFlag{
@@ -54,10 +55,27 @@ func main() {
 						},
 						Action: func(ctx context.Context, cmd *cli.Command) error {
 							return runAction(ctx, cmd, func(client *gotestguide.Client) error {
-								projectID := cmd.Int("project")
+								projectId := cmd.Int("project")
 								converter := cmd.String("converter")
 								report := cmd.String("report")
-								return gotestguideapp.UploadReport(client, projectID, converter, report)
+								return gotestguideapp.UploadReport(client, projectId, converter, report)
+							})
+						},
+					},
+					{
+						Name:  "delete-report",
+						Usage: "Delete the report with the given report ID",
+						Flags: []cli.Flag{
+							&cli.Int64Flag{
+								Name:     "report",
+								Aliases:  []string{"reportId"},
+								Required: true,
+							},
+						},
+						Action: func(ctx context.Context, cmd *cli.Command) error {
+							return runAction(ctx, cmd, func(client *gotestguide.Client) error {
+								reportId := cmd.Int64("report")
+								return gotestguideapp.DeleteReport(client, reportId)
 							})
 						},
 					},

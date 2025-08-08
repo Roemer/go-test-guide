@@ -15,6 +15,7 @@ To define the base url of the server and the token, you can either pass `--base-
 ### Commands
 * `report-management` (`rm`): Manage reports
   * `upload-report`: Upload a new report
+  * `delete-report`: Delete the report with the given report ID
   * `add-artifact`: Add a new artifact
 
 ### Examples

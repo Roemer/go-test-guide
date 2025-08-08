@@ -6,12 +6,21 @@ import (
 	gotestguide "github.com/roemer/go-test-guide"
 )
 
-func UploadReport(client *gotestguide.Client, projectID int, converter, report string) error {
-	task, _, err := client.ReportManagement.UploadReport(projectID, converter, report)
+func UploadReport(client *gotestguide.Client, projectId int, converter, report string) error {
+	task, _, err := client.ReportManagement.UploadReport(projectId, converter, report)
 	if err != nil {
 		return fmt.Errorf("failed to upload report: %w", err)
 	}
 	fmt.Println("Report uploaded successfully. Task ID:", task.TaskID)
+	return nil
+}
+
+func DeleteReport(client *gotestguide.Client, reportId int64) error {
+	task, _, err := client.ReportManagement.DeleteReport(reportId)
+	if err != nil {
+		return fmt.Errorf("failed to delete report: %w", err)
+	}
+	fmt.Println("Report deleted successfully. Task ID:", task.TaskID)
 	return nil
 }
 
