@@ -68,6 +68,14 @@ func (c *Client) NewRequest(method, path string, body io.Reader) (*http.Request,
 func (c *Client) Do(req *http.Request, v any) (*http.Response, error) {
 	if c.debug {
 		fmt.Printf("Sending request: %s %s\n", req.Method, req.URL)
+		if req.Body != nil {
+			bodyBytes, _ := io.ReadAll(req.Body)
+			req.Body.Close()
+			if len(bodyBytes) > 0 {
+				fmt.Printf("Body: %s\n", string(bodyBytes))
+			}
+			req.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+		}
 	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
